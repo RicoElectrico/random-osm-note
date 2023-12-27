@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Country List</title>
+    <style>
+        body {
+            font-size: 16px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .country-list {
+            column-count: 4;
+            column-gap: 20px; /* Optional: Adjust the gap between columns */
+            margin: 0 auto; /* Center the column layout */
+        }
+
+        @media (max-width: 767px) {
+            .country-list {
+                column-count: 1; /* Change to a single column on small screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Random OSM Note</h1>
+    <p>This tool redirects you to a random open OpenStreetMap <a href="https://wiki.openstreetmap.org/wiki/Notes">Note</a>.
+    They are used for reporting map errors or improvements.
+    Many notes can be resolved without surveying the location, be it with aerial imagery, official sources or because someone already fixed the issue.
+    This tool uses a smart random queue in which a note will be served again only after all other notes have been already shown.
+    <br/>
+        Got feeedback? Let me know in the <a href="https://community.openstreetmap.org/t/random-note-tool/107475">OSM forum thread.</a>
+    </p>
+    <h3>Tips</h3>
+    <p>
+        <ul>
+            <li>Turn on the Notes layer at openstreetmap.org to look for other notes in the vicinity.</li>
+            <li>If a user's note contained useful feedback, check other notes in their OSM profile.</li>
+            <li>Save these bookmarklets to <a href="javascript:(function(){var id=location.href.match(/www\.openstreetmap\.org\/note\/(\d+)/);if(id!=null){var req=new XMLHttpRequest;req.open('GET', 'https://www.openstreetmap.org/api/0.6/notes/'+id[1]+'.json',false);req.send(null);var note=JSON.parse(req.responseText);var noteText=note.properties.comments[0].text;window.open('https://translate.google.com/?sl=auto&tl=en&op=translate&text='+encodeURIComponent(noteText))}else{alert('This is not a valid OSM note page.')}})();">translate</a> a note or <a href="javascript:(function(){var id=location.href.match(/www\.openstreetmap\.org\/note\/(\d+)/);if(id!=null){var req=new XMLHttpRequest;req.open('GET','https://www.openstreetmap.org/api/0.6/notes/'+id[1]+'.json',false);req.send(null);var note=JSON.parse(req.responseText);var date=new Date(note.properties.date_created.replace(' UTC',''));var lat=note.geometry.coordinates[1];var lon=note.geometry.coordinates[0];var zoom=18;var isoDate=date.toISOString();var noteText=note.properties.comments[0].text;var osmDataVersion=noteText.match(/OSM data version\: ([\d]{4}-[\d]{2}-[\d]{2}T[\d]{2}\:[\d]{2}\:[\d]{2}\Z)/);if(osmDataVersion!=null){isoDate=osmDataVersion[1]}var queryString='[date:''+isoDate+''];\n(\n  node({{bbox}});\n  way({{bbox}});\n  //relation({{bbox}});\n);\r\nout meta;\n>;\nout meta qt;';window.open('https://overpass-turbo.eu/?Q='+escape(queryString)+'&C='+lat+';'+lon+';'+zoom+'&R')}else{alert('This is not a valid OSM note page.')}})();">check historical OSM data</a> at the time of note creation</li>
+        </ul>
+    </p>
+    <h3>Credits</h3>
+    <p>Country boundaries from <a href="https://github.com/Zaczero/osm-countries-geojson">osm-countries-geojson</a>. Data &copy; OpenStreetMap contributors.</p>
+    <h2>Country List</h2>
+   <p> Either <b>bookmark</b> a link, or open a few random notes in a new tab with a <b>middle-click.</b></p>
+    <div class="country-list">
+        <b><a href="/random-note" target="_blank">World</a></b><br/>    
+        {% for iso_code, name in countries %}
+            <a href="/random-note/{{ iso_code }}" target="_blank">{{ name }} ({{ iso_code }})</a><br/>
+        {% endfor %}
+    </div>
+</body>
+</html>
