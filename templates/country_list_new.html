@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:title" content="Random OSM Note">
+    <meta property="og:description" content="Explore random OSM Notes from every country of the world.">
+    <title>Random OSM Note</title>
+    <link rel="stylesheet" href="/style.css">
+    <style>
+        .dropdown {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .dropdown-input {
+            width: 200px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            outline: none;
+            font: inherit;
+            color: inherit;
+        }
+
+        .dropdown-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            border-top: none;
+            border-radius: 0 0 4px 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            display: none;
+        }
+
+        .dropdown-list-item {
+            padding: 8px;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .dropdown-list-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        .go-link, .go-link:hover {
+            display: inline-block;
+            background-color: #4caf50;
+            color: #fff !important;
+            padding: 8px;
+            border: none;
+            border-radius: 4px;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+        }    
+        .h1, .interactive-box {
+            margin: 0 auto;
+            text-align: center;
+        }   
+
+    </style>
+
+</head>
+<body>
+    <main id="main" role="main">
+
+
+    <div class="interactive-box">
+    <h1>Random OSM Note</h1>   
+    <div class="dropdown">
+        <input type="text" class="dropdown-input" placeholder="Select a country" id="countryInput">
+        <div class="dropdown-list" id="countryList"></div>
+    </div>
+
+    <a class="go-link" id="goLink" target="_blank" href="/random-note/">🎲 Show me a random note</a>
+    </div>
+
+    <p>This tool redirects you to a random open OpenStreetMap <a href="https://wiki.openstreetmap.org/wiki/Notes">Note</a>.
+    They are used for reporting map errors or improvements.
+    Many notes can be resolved without surveying the location, be it with aerial imagery, official sources or because someone already fixed the issue.
+    This tool uses a <b>smart random queue</b> on its own backend (not via OSM API) in which a note will be served again only after all other notes have been already shown.
+    <br/>
+        Got feeedback? Let me know in the <a href="https://community.openstreetmap.org/t/random-note-tool/107475">OSM forum thread.</a>
+    <br/>
+        Code available on <a href="https://github.com/RicoElectrico/random-osm-note">GitHub</a>.
+    </p>
+
+    <h2>Tips</h2>
+    <p>
+        <ul>
+            <li>Turn on the Notes layer at openstreetmap.org to look for other notes in the vicinity.</li>
+            <li>If a user's note contained useful feedback, check other notes in their OSM profile.</li>
+            <li>Save these bookmarklets to <a href="javascript:(function(){var id=location.href.match(/www\.openstreetmap\.org\/note\/(\d+)/);if(id!=null){var req=new XMLHttpRequest;req.open('GET', 'https://www.openstreetmap.org/api/0.6/notes/'+id[1]+'.json',false);req.send(null);var note=JSON.parse(req.responseText);var noteText=note.properties.comments[0].text;window.open('https://translate.google.com/?sl=auto&tl=en&op=translate&text='+encodeURIComponent(noteText))}else{alert('This is not a valid OSM note page.')}})();">translate</a> a note or <a href="javascript:(function()%7Bvar id%3Dlocation.href.match(/www\.openstreetmap\.org\/note\/(%5Cd+)/)%3Bif(id!%3Dnull)%7Bvar req%3Dnew XMLHttpRequest%3Breq.open(%22GET%22,%22https://www.openstreetmap.org/api/0.6/notes/%22%2Bid[1]%2B%22.json%22,false)%3Breq.send(null)%3Bvar note%3DJSON.parse(req.responseText)%3Bvar date%3Dnew Date(note.properties.date_created.replace(%22 UTC%22,%22%22))%3Bvar lat%3Dnote.geometry.coordinates[1]%3Bvar lon%3Dnote.geometry.coordinates[0]%3Bvar zoom%3D18%3Bvar isoDate%3Ddate.toISOString()%3Bvar noteText%3Dnote.properties.comments[0].text%3Bvar osmDataVersion%3DnoteText.match(/OSM data version%3A (%5B%5Cd%5D%7B4%7D-%5B%5Cd%5D%7B2%7D-%5B%5Cd%5D%7B2%7D%5CT%5B%5Cd%5D%7B2%7D%3A%5B%5Cd%5D%7B2%7D%3A%5B%5Cd%5D%7B2%7D%5CZ)/)%3Bif(osmDataVersion!%3Dnull)%7BisoDate%3DosmDataVersion[1]%7Dvar queryString%3D'%5Bdate:%22'%2BisoDate%2B'%22%5D%3B%5Cn(%5Cn  node(%7B%7Bbbox%7D%7D)%3B%5Cn  way(%7B%7Bbbox%7D%7D)%3B%5Cn  //relation(%7B%7Bbbox%7D%7D)%3B%5Cn)%3B%5Cr%5Cnout meta%3B%5Cn%3E%3B%5Cnout meta qt%3B'%3Bwindow.open(%22https://overpass-turbo.eu/?Q=%22%2Bescape(queryString)%2B%22&C=%22%2Blat%2B%22;%22%2Blon%2B%22;%22%2Bzoom%2B%22&R%22)%7Delse%7Balert(%22This%20is%20not%20a%20valid%20OSM%20note%20page.%22)%7D%7D)();">browse historical OSM data</a> at the time of note creation</li>
+            <li>Check stats about notes on <a href="https://resultmaps.neis-one.org/osm-notes">Pascal Neis' site</a>.</li>
+            <li>The green button is bookmarkable if you want to bypass this list in the future. Just right click on it after selecting a country.</li>
+        </ul>
+    </p>
+    <h2>Credits</h2>
+    <p>Country boundaries from <a href="https://github.com/Zaczero/osm-countries-geojson">osm-countries-geojson</a>. Data &copy; OpenStreetMap contributors.</p>
+    </main>
+
+    <script>
+        const countryInput = document.getElementById('countryInput');
+        const countryList = document.getElementById('countryList');
+        const goLink = document.getElementById('goLink');
+        const countries = [
+            { "iso_code": "", "name": "World" },
+            {% for iso_code, name in countries %}
+                { "iso_code": "{{ iso_code }}", "name": "{{ name|safe|replace('ã', 'a')|replace('é', 'e')|replace('í', 'i')|replace('ô', 'o') }}" },
+            {% endfor %}
+        ];
+
+        // Populate the initial country list
+        updateCountryList(countries);
+
+        // Set default link target
+        const defaultLink = '/random-note/';
+        goLink.href = defaultLink;
+
+        // Update country selection from URL anchor
+        const urlAnchor = window.location.hash.substring(1);
+        if (urlAnchor) {
+            const selectedCountry = countries.find(country => country.iso_code.toLowerCase() === urlAnchor.toLowerCase());
+            if (selectedCountry) {
+                countryInput.value = selectedCountry.name;
+                updateGoLink(selectedCountry.iso_code);
+            }
+        }
+
+        // Event listener to show the dropdown list when the input is focused
+        countryInput.addEventListener('focus', showDropdown);
+
+        // Event listener to hide the dropdown list when clicking outside
+        document.addEventListener('click', (event) => {
+            if (!countryInput.contains(event.target)) {
+                hideDropdown();
+            }
+        });
+
+        // Event listener to handle typing in the input and filter the country list
+        countryInput.addEventListener('input', () => {
+            const inputText = countryInput.value.trim().toLowerCase();
+            const isValidInput = countries.some(country => country.name.toLowerCase().includes(inputText));
+
+            if (isValidInput) {
+                countryInput.style.backgroundColor = ''; // Reset background color
+                const filteredCountries = countries.filter(country => country.name.toLowerCase().includes(inputText));
+                updateCountryList(filteredCountries);
+                if (filteredCountries.length === 1) {
+                    updateUrlAnchor(filteredCountries[0].iso_code);
+                    updateGoLink(filteredCountries[0].iso_code);
+                } else {
+                    disableGoLink();
+                    updateUrlAnchor('');
+
+                }
+            } else {
+                countryInput.style.backgroundColor = '#ffc0c0'; // Set background color for invalid input
+                updateCountryList([]); // Clear the country list
+                disableGoLink();
+                updateUrlAnchor('');
+            }
+        });
+
+        // Event listener to handle blurring the input (losing focus)
+        countryInput.addEventListener('blur', () => {
+            const inputText = countryInput.value.trim().toLowerCase();
+            const isValidInput = countries.some(country => country.name.toLowerCase().includes(inputText));
+
+            if (isValidInput) {
+                const filteredCountries = countries.filter(country => country.name.toLowerCase().includes(inputText));
+                if (filteredCountries.length === 1) {
+                    const selectedCountry = filteredCountries[0];
+                    countryInput.value = selectedCountry.name;
+                    updateGoLink(selectedCountry.iso_code);
+                    updateUrlAnchor(selectedCountry.iso_code);
+                } else {
+                    updateUrlAnchor('');
+                }
+            } else {
+                updateUrlAnchor('');
+            }
+        });
+
+        // Event listener to handle selecting a country from the list
+        countryList.addEventListener('click', (event) => {
+            if (event.target.classList.contains('dropdown-list-item')) {
+                countryInput.value = event.target.textContent;
+                hideDropdown();
+                updateGoLink(getIsoCodeFromName(countryInput.value));
+                updateUrlAnchor(getIsoCodeFromName(countryInput.value));
+            }
+        });
+
+        function showDropdown() {
+            countryList.style.display = 'block';
+        }
+
+        function hideDropdown() {
+            countryList.style.display = 'none';
+        }
+
+        function updateCountryList(countriesArray) {
+            countryList.innerHTML = '';
+            countriesArray.forEach(country => {
+                const listItem = document.createElement('div');
+                listItem.className = 'dropdown-list-item';
+                listItem.textContent = country.name;
+                countryList.appendChild(listItem);
+            });
+        }
+
+        function updateGoLink(isoCode) {
+            const url = isoCode ? `/random-note/${isoCode}` : defaultLink;
+            goLink.href = url;
+            goLink.target = '_blank'
+        }
+        function disableGoLink() {
+            goLink.href = '#';
+            goLink.target = '_self'
+        }
+
+        function updateUrlAnchor(isoCode) {
+            window.location.hash = isoCode;
+        }
+
+        function getIsoCodeFromName(countryName) {
+            const selectedCountry = countries.find(country => country.name.toLowerCase() === countryName.toLowerCase());
+            return selectedCountry ? selectedCountry.iso_code : '';
+        }
+    </script>
+
+</body>
+</html>

@@ -25,22 +25,27 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="/style.css">
 </head>
 <body>
     <h1>Random OSM Note</h1>
     <p>This tool redirects you to a random open OpenStreetMap <a href="https://wiki.openstreetmap.org/wiki/Notes">Note</a>.
     They are used for reporting map errors or improvements.
     Many notes can be resolved without surveying the location, be it with aerial imagery, official sources or because someone already fixed the issue.
-    This tool uses a smart random queue in which a note will be served again only after all other notes have been already shown.
+    This tool uses a <b>smart random queue</b> on its own backend (not via OSM API) in which a note will be served again only after all other notes have been already shown.
     <br/>
         Got feeedback? Let me know in the <a href="https://community.openstreetmap.org/t/random-note-tool/107475">OSM forum thread.</a>
+    <br/>
+        Code available on <a href="https://github.com/RicoElectrico/random-osm-note">GitHub</a>.
     </p>
+
     <h3>Tips</h3>
     <p>
         <ul>
             <li>Turn on the Notes layer at openstreetmap.org to look for other notes in the vicinity.</li>
             <li>If a user's note contained useful feedback, check other notes in their OSM profile.</li>
-            <li>Save these bookmarklets to <a href="javascript:(function(){var id=location.href.match(/www\.openstreetmap\.org\/note\/(\d+)/);if(id!=null){var req=new XMLHttpRequest;req.open('GET', 'https://www.openstreetmap.org/api/0.6/notes/'+id[1]+'.json',false);req.send(null);var note=JSON.parse(req.responseText);var noteText=note.properties.comments[0].text;window.open('https://translate.google.com/?sl=auto&tl=en&op=translate&text='+encodeURIComponent(noteText))}else{alert('This is not a valid OSM note page.')}})();">translate</a> a note or <a href="javascript:(function(){var id=location.href.match(/www\.openstreetmap\.org\/note\/(\d+)/);if(id!=null){var req=new XMLHttpRequest;req.open('GET','https://www.openstreetmap.org/api/0.6/notes/'+id[1]+'.json',false);req.send(null);var note=JSON.parse(req.responseText);var date=new Date(note.properties.date_created.replace(' UTC',''));var lat=note.geometry.coordinates[1];var lon=note.geometry.coordinates[0];var zoom=18;var isoDate=date.toISOString();var noteText=note.properties.comments[0].text;var osmDataVersion=noteText.match(/OSM data version\: ([\d]{4}-[\d]{2}-[\d]{2}T[\d]{2}\:[\d]{2}\:[\d]{2}\Z)/);if(osmDataVersion!=null){isoDate=osmDataVersion[1]}var queryString='[date:''+isoDate+''];\n(\n  node({{bbox}});\n  way({{bbox}});\n  //relation({{bbox}});\n);\r\nout meta;\n>;\nout meta qt;';window.open('https://overpass-turbo.eu/?Q='+escape(queryString)+'&C='+lat+';'+lon+';'+zoom+'&R')}else{alert('This is not a valid OSM note page.')}})();">check historical OSM data</a> at the time of note creation</li>
+            <li>Save these bookmarklets to <a href="javascript:(function(){var id=location.href.match(/www\.openstreetmap\.org\/note\/(\d+)/);if(id!=null){var req=new XMLHttpRequest;req.open('GET', 'https://www.openstreetmap.org/api/0.6/notes/'+id[1]+'.json',false);req.send(null);var note=JSON.parse(req.responseText);var noteText=note.properties.comments[0].text;window.open('https://translate.google.com/?sl=auto&tl=en&op=translate&text='+encodeURIComponent(noteText))}else{alert('This is not a valid OSM note page.')}})();">translate</a> a note or <a href="javascript:(function()%7Bvar id%3Dlocation.href.match(/www\.openstreetmap\.org\/note\/(%5Cd+)/)%3Bif(id!%3Dnull)%7Bvar req%3Dnew XMLHttpRequest%3Breq.open(%22GET%22,%22https://www.openstreetmap.org/api/0.6/notes/%22%2Bid[1]%2B%22.json%22,false)%3Breq.send(null)%3Bvar note%3DJSON.parse(req.responseText)%3Bvar date%3Dnew Date(note.properties.date_created.replace(%22 UTC%22,%22%22))%3Bvar lat%3Dnote.geometry.coordinates[1]%3Bvar lon%3Dnote.geometry.coordinates[0]%3Bvar zoom%3D18%3Bvar isoDate%3Ddate.toISOString()%3Bvar noteText%3Dnote.properties.comments[0].text%3Bvar osmDataVersion%3DnoteText.match(/OSM data version%3A (%5B%5Cd%5D%7B4%7D-%5B%5Cd%5D%7B2%7D-%5B%5Cd%5D%7B2%7D%5CT%5B%5Cd%5D%7B2%7D%3A%5B%5Cd%5D%7B2%7D%3A%5B%5Cd%5D%7B2%7D%5CZ)/)%3Bif(osmDataVersion!%3Dnull)%7BisoDate%3DosmDataVersion[1]%7Dvar queryString%3D'%5Bdate:%22'%2BisoDate%2B'%22%5D%3B%5Cn(%5Cn  node(%7B%7Bbbox%7D%7D)%3B%5Cn  way(%7B%7Bbbox%7D%7D)%3B%5Cn  //relation(%7B%7Bbbox%7D%7D)%3B%5Cn)%3B%5Cr%5Cnout meta%3B%5Cn%3E%3B%5Cnout meta qt%3B'%3Bwindow.open(%22https://overpass-turbo.eu/?Q=%22%2Bescape(queryString)%2B%22&C=%22%2Blat%2B%22;%22%2Blon%2B%22;%22%2Bzoom%2B%22&R%22)%7Delse%7Balert(%22This%20is%20not%20a%20valid%20OSM%20note%20page.%22)%7D%7D)();">browse historical OSM data</a> at the time of note creation</li>
+            <li>Check stats about notes on <a href="https://resultmaps.neis-one.org/osm-notes">Pascal Neis' site</a>.</li>
         </ul>
     </p>
     <h3>Credits</h3>

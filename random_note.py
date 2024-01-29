@@ -69,6 +69,13 @@ def country_list():
         cursor.execute("SELECT iso_code, name FROM countries ORDER BY name")
         countries = cursor.fetchall()
         return render_template('country_list.html', countries=countries)
+    
+@app.route('/list-new')
+def country_list_new():
+    with connection, connection.cursor() as cursor:
+        cursor.execute("SELECT iso_code, name FROM countries ORDER BY name")
+        countries = cursor.fetchall()
+        return render_template('country_list_new.html', countries=countries)
 
 if __name__ == '__main__':
     app.run(debug=True)
