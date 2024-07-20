@@ -1,4 +1,4 @@
-from flask import Flask, redirect, render_template
+from flask import Flask, redirect, render_template, request
 import psycopg2
 from psycopg2 import sql
 import threading
@@ -39,7 +39,7 @@ def random_note(country_code=None):
                     FOR UPDATE
                     LIMIT 1
                 )
-                RETURNING id;
+                RETURNING id, lat, lon;
                 """
             cursor.execute(select_query, (country_code,))
         else:
@@ -53,29 +53,33 @@ def random_note(country_code=None):
                     FOR UPDATE
                     LIMIT 1
                 )
-                RETURNING id;
+                RETURNING id, lat, lon;
                 """
             cursor.execute(select_query)
-        selected_id = cursor.fetchone()[0] if cursor.rowcount else None
+        selected_id, lat, lon = cursor.fetchone() if cursor.rowcount else None
         connection.commit()
+
         if selected_id:
-            return redirect(f"https://openstreetmap.org/note/{selected_id}", code=302)
+            
+            zoom = request.args.get('z', type = int)
+            if zoom and 1 <= zoom <= 20:
+                hashUrl = f"#map={zoom}/{lat:.6f}/{lon:.6f}"
+            else:
+                hashUrl = ""
+
+            return redirect(f"https://openstreetmap.org/note/{selected_id}{hashUrl}", code=302)
+        
         else:
             return "No notes available"
 
-@app.route('/list')
+
+@app.route('/list')    
+@app.route('/list-new')
 def country_list():
     with connection, connection.cursor() as cursor:
         cursor.execute("SELECT iso_code, name FROM countries ORDER BY name")
         countries = cursor.fetchall()
         return render_template('country_list.html', countries=countries)
-    
-@app.route('/list-new')
-def country_list_new():
-    with connection, connection.cursor() as cursor:
-        cursor.execute("SELECT iso_code, name FROM countries ORDER BY name")
-        countries = cursor.fetchall()
-        return render_template('country_list_new.html', countries=countries)
 
 if __name__ == '__main__':
     app.run(debug=True)
